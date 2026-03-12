@@ -238,8 +238,6 @@ class _FullScreenCalendarPageState extends State<FullScreenCalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Full Screen Calendar'),
