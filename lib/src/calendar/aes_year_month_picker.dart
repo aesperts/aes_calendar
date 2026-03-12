@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../picker/aes_wheel_picker.dart';
+import 'aes_calendar_theme.dart';
+import 'aes_calendar_defaults.dart';
 
 /// A dialog widget that allows selecting a year and month
 /// using two wheel pickers.
@@ -18,12 +20,20 @@ class AesYearMonthPicker extends StatefulWidget {
   /// Callback when user confirms selection
   final ValueChanged<DateTime> onSelected;
 
+  /// Optional visual customization (shared with [AesCalendar]).
+  final AesCalendarTheme? theme;
+
+  /// Optional text customization (shared with [AesCalendar]).
+  final AesCalendarTexts? texts;
+
   const AesYearMonthPicker({
     super.key,
     required this.initialDate,
     required this.onSelected,
     this.startDate,
     this.endDate,
+    this.theme,
+    this.texts,
   });
 
   @override
@@ -82,6 +92,12 @@ class _AesYearMonthPickerState
 
     final months = List.generate(12, (index) => index + 1);
 
+    final defaultsTheme = AesCalendarDefaults.themeOf(context);
+    final calendarTheme = widget.theme;
+    final baseWheelTextStyle =
+        calendarTheme?.dayTextStyle ??
+            defaultsTheme.dayTextStyle;
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -101,6 +117,7 @@ class _AesYearMonthPickerState
                     items: years,
                     selectedItem: _selected.year,
                     itemLabel: (year) => year.toString(),
+                    textStyle: baseWheelTextStyle,
                     onChanged: (year) {
                       final candidate =
                       DateTime(year, _selected.month);
@@ -122,6 +139,7 @@ class _AesYearMonthPickerState
                     itemLabel: (month) => month
                         .toString()
                         .padLeft(2, '0'),
+                    textStyle: baseWheelTextStyle,
                     onChanged: (month) {
                       final candidate =
                       DateTime(_selected.year, month);
@@ -146,14 +164,22 @@ class _AesYearMonthPickerState
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  child: Text(
+                    (widget.texts ??
+                            AesCalendarDefaults.texts())
+                        .cancelLabel,
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     widget.onSelected(_selected);
                     Navigator.pop(context);
                   },
-                  child: const Text('OK'),
+                  child: Text(
+                    (widget.texts ??
+                            AesCalendarDefaults.texts())
+                        .okLabel,
+                  ),
                 ),
               ],
             ),

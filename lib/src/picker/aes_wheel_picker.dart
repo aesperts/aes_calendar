@@ -6,6 +6,7 @@ class AesWheelPicker<T> extends StatelessWidget {
   final T selectedItem;
   final ValueChanged<T> onChanged;
   final String Function(T) itemLabel;
+  final TextStyle? textStyle;
 
   const AesWheelPicker({
     super.key,
@@ -13,6 +14,7 @@ class AesWheelPicker<T> extends StatelessWidget {
     required this.selectedItem,
     required this.onChanged,
     required this.itemLabel,
+    this.textStyle,
   });
 
   @override
@@ -30,7 +32,10 @@ class AesWheelPicker<T> extends StatelessWidget {
           childCount: items.length,
           builder: (context, index) {
             return Center(
-              child: Text(itemLabel(items[index])),
+              child: Text(
+                itemLabel(items[index]),
+                style: textStyle,
+              ),
             );
           },
         ),
