@@ -1,6 +1,6 @@
 name: aes_calendar
 description: "description: A lightweight and customizable Flutter calendar package featuring year-month selector, wheel picker, and flexible date utilities."
-version: 0.0.3
+version: 0.0.4
 homepage: https://github.com/aesperts/aes_calendar
 
 environment:

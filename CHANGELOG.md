@@ -1,4 +1,12 @@
-## 0.0.3 (unreleased)
+## 0.0.4
+
+### 📄 Documentation
+- Updated sample images in README (screenshots for home, dialog, and full-screen example)
+- Updated URLs in documentation
+
+---
+
+## 0.0.3
 
 ### ✨ Features
 - **Two display modes**: dialog popup via `AesCalendar.show()` and full-screen/embedded widget via `AesCalendar`
