@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../utils/date_utils.dart';
+import 'aes_calendar_theme.dart';
+import 'aes_calendar_defaults.dart';
 import 'aes_year_month_picker.dart';
 
 /// A customizable calendar widget with:
@@ -15,6 +17,17 @@ class AesCalendar extends StatefulWidget {
   final ValueChanged<DateTime>? onDateSelected;
   final bool showAsDialog;
 
+  /// Optional visual customization for the calendar.
+  final AesCalendarTheme? theme;
+
+  /// Optional text customization (e.g. dialog button labels).
+  final AesCalendarTexts? texts;
+
+  /// Optional builder for the month title in the header.
+  ///
+  /// By default, uses [DateFormat.yMMM].
+  final String Function(DateTime month)? monthLabelBuilder;
+
   const AesCalendar({
     super.key,
     this.startDate,
@@ -22,6 +35,9 @@ class AesCalendar extends StatefulWidget {
     this.selectedDate,
     this.onDateSelected,
     this.showAsDialog = false,
+    this.theme,
+    this.texts,
+    this.monthLabelBuilder,
   });
 
   /// Opens calendar as dialog and returns selected date.
@@ -30,6 +46,9 @@ class AesCalendar extends StatefulWidget {
         DateTime? selectedDate,
         DateTime? startDate,
         DateTime? endDate,
+        AesCalendarTheme? theme,
+        AesCalendarTexts? texts,
+        String Function(DateTime month)? monthLabelBuilder,
       }) {
     return showDialog(
       context: context,
@@ -41,6 +60,9 @@ class AesCalendar extends StatefulWidget {
             startDate: startDate,
             endDate: endDate,
             showAsDialog: true,
+            theme: theme,
+            texts: texts,
+            monthLabelBuilder: monthLabelBuilder,
             onDateSelected: (date) =>
                 Navigator.pop(context, date),
           ),
@@ -121,6 +143,8 @@ class _AesCalendarState extends State<AesCalendar> {
         initialDate: _currentMonth,
         startDate: widget.startDate,
         endDate: widget.endDate,
+        theme: widget.theme,
+        texts: widget.texts,
         onSelected: (date) {
           setState(() => _currentMonth = date);
         },
@@ -132,6 +156,36 @@ class _AesCalendarState extends State<AesCalendar> {
   Widget build(BuildContext context) {
     final days = _monthDays(_currentMonth);
     final today = AesDateUtils.strip(DateTime.now());
+    final materialTheme = Theme.of(context);
+    final defaultsTheme = AesCalendarDefaults.themeOf(context);
+    final calendarTheme = widget.theme;
+
+    final selectedDayBackgroundColor =
+        calendarTheme?.selectedDayBackgroundColor ??
+            defaultsTheme.selectedDayBackgroundColor!;
+    final selectedDayTextColor =
+        calendarTheme?.selectedDayTextColor ??
+            defaultsTheme.selectedDayTextColor!;
+    final todayBackgroundColor =
+        calendarTheme?.todayBackgroundColor ??
+            defaultsTheme.todayBackgroundColor!;
+    final todayTextColor =
+        calendarTheme?.todayTextColor ??
+            defaultsTheme.todayTextColor!;
+    final disabledDayTextColor =
+        calendarTheme?.disabledDayTextColor ??
+            defaultsTheme.disabledDayTextColor!;
+    final normalDayTextColor =
+        calendarTheme?.dayTextColor;
+    final dayBorderRadius =
+        calendarTheme?.dayBorderRadius ??
+            defaultsTheme.dayBorderRadius;
+    final headerTextStyle =
+        calendarTheme?.headerTextStyle ??
+            defaultsTheme.headerTextStyle;
+    final baseDayTextStyle =
+        calendarTheme?.dayTextStyle ??
+            defaultsTheme.dayTextStyle;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -141,7 +195,10 @@ class _AesCalendarState extends State<AesCalendar> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              icon: const Icon(Icons.chevron_left),
+              icon: Icon(
+                calendarTheme?.previousMonthIcon ??
+                    defaultsTheme.previousMonthIcon!,
+              ),
               onPressed: _canMoveTo(
                   DateTime(_currentMonth.year, _currentMonth.month - 1))
                   ? () => setState(() {
@@ -156,13 +213,18 @@ class _AesCalendarState extends State<AesCalendar> {
             GestureDetector(
               onTap: _openYearMonthPicker,
               child: Text(
-                DateFormat.yMMM().format(_currentMonth),
-                style: Theme.of(context).textTheme.titleMedium,
+                (widget.monthLabelBuilder ??
+                    (date) => DateFormat.yMMM().format(date))
+                    (_currentMonth),
+                style: headerTextStyle,
               ),
             ),
 
             IconButton(
-              icon: const Icon(Icons.chevron_right),
+              icon: Icon(
+                calendarTheme?.nextMonthIcon ??
+                    defaultsTheme.nextMonthIcon!,
+              ),
               onPressed: _canMoveTo(
                   DateTime(_currentMonth.year, _currentMonth.month + 1))
                   ? () => setState(() {
@@ -194,6 +256,8 @@ class _AesCalendarState extends State<AesCalendar> {
             AesDateUtils.isSameDate(date, today);
             final isSelected = _selectedDate != null &&
                 AesDateUtils.isSameDate(date, _selectedDate!);
+            final isOutsideCurrentMonth =
+                date.month != _currentMonth.month;
 
             return GestureDetector(
               onTap: isDisabled
@@ -206,23 +270,22 @@ class _AesCalendarState extends State<AesCalendar> {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Theme.of(context).colorScheme.primary
+                      ? selectedDayBackgroundColor
                       : isToday
-                      ? Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withOpacity(0.2)
-                      : null,
-                  borderRadius: BorderRadius.circular(8),
+                          ? todayBackgroundColor
+                          : null,
+                  borderRadius: dayBorderRadius,
                 ),
                 child: Text(
                   '${date.day}',
-                  style: TextStyle(
+                  style: (baseDayTextStyle ?? const TextStyle()).copyWith(
                     color: isDisabled
-                        ? Colors.grey
+                        ? disabledDayTextColor
                         : isSelected
-                        ? Colors.white
-                        : null,
+                            ? selectedDayTextColor
+                            : isToday
+                                ? todayTextColor
+                                : normalDayTextColor,
                   ),
                 ),
               ),

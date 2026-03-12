@@ -1,18 +1,36 @@
 # aes_calendar
 
-A customizable and lightweight Flutter calendar widget with built-in year–month selector and wheel picker support.
+A customizable and lightweight Flutter calendar widget with:
 
-`aes_calendar` makes it easy to integrate a clean, interactive calendar into your Flutter app with minimal configuration.
+- Dialog popup mode
+- Full-screen/widget mode
+- Built-in year–month selector and wheel picker support
+
+`aes_calendar` makes it easy to integrate a clean, theme-aware calendar into your Flutter app with minimal configuration, while still allowing full color and text customization.
+
+---
+
+## 📸 Preview
+
+Dialog + full-screen examples from the bundled `example` app:
+
+![AES Calendar Example – Home](https://github.com/aesperts/aes_calendar/main/assets/screenshot_1.png)
+
+![AES Calendar Example – Dialog](https://github.com/aesperts/aes_calendar/main/assets/screenshot_2.png)
+
+![AES Calendar Example – Full Screen](https://github.com/aesperts/aes_calendar/main/assets/screenshot_3.png)
 
 ---
 
 ## ✨ Features
 
 - 📅 Interactive calendar UI
-- 🗓 Year & Month selector
-- 🎡 Wheel-style date picker
+- 🗓 Year & Month selector dialog with wheel pickers
+- 💬 Two display modes: dialog popup and full-screen/widget
 - 🎯 Date selection callback
-- 🔒 Optional maximum date restriction
+- 🔒 Optional min/max date restriction
+- 🎨 Fully themable via `AesCalendarTheme`
+- 🔤 Customizable button labels via `AesCalendarTexts`
 - 🧩 Lightweight and easy to integrate
 
 ---
@@ -42,51 +60,25 @@ Import the package:
 import 'package:aes_calendar/aes_calendar.dart';
 ```
 
-Use `AesCalendar` inside your widget:
+There are two main ways to use the calendar.
+
+### 1. Dialog popup
 
 ```dart
-AesCalendar(
-  selectedDate: DateTime.now(),
-  endDate: DateTime(2030),
-  onDateSelected: (date) {
-    print("Selected Date: $date");
-  },
-)
+final selected = await AesCalendar.show(
+  context,
+  startDate: DateTime(2020, 1, 1),
+  endDate: DateTime(2030, 12, 31),
+);
+
+if (selected != null) {
+  print('Selected date: $selected');
+}
 ```
 
----
-
-## 🧩 Parameters
-
-| Parameter        | Type                     | Required | Description |
-|------------------|--------------------------|----------|-------------|
-| `selectedDate`   | `DateTime`               | ✅ Yes   | Initially selected date |
-| `endDate`        | `DateTime?`              | ❌ No    | Maximum selectable date |
-| `onDateSelected` | `ValueChanged<DateTime>` | ✅ Yes   | Callback when date changes |
-
----
-
-## 🏗 Complete Example
+### 2. Full-screen / embedded widget
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:aes_calendar/aes_calendar.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: CalendarExample(),
-    );
-  }
-}
-
 class CalendarExample extends StatefulWidget {
   const CalendarExample({super.key});
 
@@ -115,6 +107,94 @@ class _CalendarExampleState extends State<CalendarExample> {
     );
   }
 }
+```
+
+---
+
+## 🧩 Parameters
+
+### `AesCalendar` widget
+
+| Parameter           | Type                          | Required | Description |
+|---------------------|-------------------------------|----------|-------------|
+| `startDate`         | `DateTime?`                   | ❌ No    | Minimum selectable date |
+| `endDate`           | `DateTime?`                   | ❌ No    | Maximum selectable date |
+| `selectedDate`      | `DateTime?`                   | ❌ No    | Initially selected date |
+| `onDateSelected`    | `ValueChanged<DateTime>?`     | ❌ No    | Callback when user selects a date |
+| `showAsDialog`      | `bool`                        | ❌ No    | Internal flag for dialog mode (use `AesCalendar.show`) |
+| `theme`             | `AesCalendarTheme?`           | ❌ No    | Visual customization (colors, radius, text styles, icons) |
+| `texts`             | `AesCalendarTexts?`           | ❌ No    | Text customization (button labels, etc.) |
+| `monthLabelBuilder` | `String Function(DateTime)?`  | ❌ No    | Custom month title builder for the header |
+
+### `AesCalendar.show` (dialog helper)
+
+```dart
+static Future<DateTime?> show(
+  BuildContext context, {
+  DateTime? selectedDate,
+  DateTime? startDate,
+  DateTime? endDate,
+  AesCalendarTheme? theme,
+  AesCalendarTexts? texts,
+  String Function(DateTime month)? monthLabelBuilder,
+})
+```
+
+---
+
+## 🎨 Customization
+
+### Theme (colors, shapes, icons, text styles)
+
+Use `AesCalendarTheme` to override visuals. Any field you omit falls back to sensible defaults based on `Theme.of(context)`:
+
+```dart
+AesCalendar(
+  selectedDate: selectedDate,
+  endDate: DateTime(2030),
+  theme: const AesCalendarTheme(
+    selectedDayBackgroundColor: Colors.teal,
+    selectedDayTextColor: Colors.white,
+    todayBackgroundColor: Color(0x332196F3),
+    todayTextColor: Colors.black,
+    disabledDayTextColor: Colors.redAccent,
+    dayBorderRadius: BorderRadius.all(Radius.circular(12)),
+    previousMonthIcon: Icons.arrow_back_ios_new,
+    nextMonthIcon: Icons.arrow_forward_ios,
+  ),
+  onDateSelected: (date) => setState(() => selectedDate = date),
+);
+```
+
+Key fields:
+
+- `selectedDayBackgroundColor`, `selectedDayTextColor`
+- `todayBackgroundColor`, `todayTextColor`
+- `disabledDayTextColor`, `dayTextColor`
+- `dayBorderRadius`
+- `headerTextStyle`, `dayTextStyle`
+- `previousMonthIcon`, `nextMonthIcon`
+
+### Texts (button labels)
+
+Use `AesCalendarTexts` to customize dialog buttons:
+
+```dart
+AesCalendar(
+  texts: const AesCalendarTexts(
+    cancelLabel: 'Close',
+    okLabel: 'Select',
+  ),
+);
+```
+
+### Custom month header format
+
+```dart
+AesCalendar(
+  monthLabelBuilder: (month) =>
+      DateFormat('MMMM yyyy').format(month),
+);
 ```
 
 ---
