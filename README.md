@@ -14,11 +14,11 @@ A customizable and lightweight Flutter calendar widget with:
 
 Dialog + full-screen examples from the bundled `example` app:
 
-![AES Calendar Example – Home](https://github.com/aesperts/aes_calendar/blob/main/assets/Screenshot_1.png)
+![AES Calendar Example – Home](https://raw.githubusercontent.com/aesperts/aes_calendar/refs/heads/main/assets/Screenshot_1.png)
 
-![AES Calendar Example – Dialog](https://github.com/aesperts/aes_calendar/blob/main/assets/Screenshot_2.png)
+![AES Calendar Example – Dialog](https://raw.githubusercontent.com/aesperts/aes_calendar/refs/heads/main/assets/Screenshot_2.png)
 
-![AES Calendar Example – Full Screen](https://github.com/aesperts/aes_calendar/blob/main/assets/Screenshot_3.png)
+![AES Calendar Example – Full Screen](https://raw.githubusercontent.com/aesperts/aes_calendar/refs/heads/main/assets/Screenshot_3.png)
 
 ---
 

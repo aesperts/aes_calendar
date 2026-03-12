@@ -1,3 +1,10 @@
+## 0.0.5
+
+### 📄 Documentation
+- Updated sample images in README (screenshots for home, dialog, and full-screen example)
+- Updated URLs in documentation
+
+---
 ## 0.0.4
 
 ### 📄 Documentation
