@@ -156,7 +156,6 @@ class _AesCalendarState extends State<AesCalendar> {
   Widget build(BuildContext context) {
     final days = _monthDays(_currentMonth);
     final today = AesDateUtils.strip(DateTime.now());
-    final materialTheme = Theme.of(context);
     final defaultsTheme = AesCalendarDefaults.themeOf(context);
     final calendarTheme = widget.theme;
 
@@ -256,8 +255,6 @@ class _AesCalendarState extends State<AesCalendar> {
             AesDateUtils.isSameDate(date, today);
             final isSelected = _selectedDate != null &&
                 AesDateUtils.isSameDate(date, _selectedDate!);
-            final isOutsideCurrentMonth =
-                date.month != _currentMonth.month;
 
             return GestureDetector(
               onTap: isDisabled
