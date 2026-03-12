@@ -1,5 +1,8 @@
 # aes_calendar
 
+[![pub package](https://img.shields.io/pub/v/aes_calendar.svg)](https://pub.dev/packages/aes_calendar)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 A customizable and lightweight Flutter calendar widget with:
 
 - Dialog popup mode
@@ -37,8 +40,10 @@ Add the dependency in your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  aes_calendar: ^0.0.1
+  aes_calendar: ^0.0.7
 ```
+
+Check [pub.dev](https://pub.dev/packages/aes_calendar) for the latest version.
 
 Then run:
 
@@ -205,6 +210,14 @@ To run it locally:
 cd example
 flutter run
 ```
+
+---
+
+## 📌 Version
+
+Current version: **0.0.6**
+
+See [CHANGELOG.md](CHANGELOG.md) for release history and changes.
 
 ---
 

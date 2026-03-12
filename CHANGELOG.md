@@ -1,21 +1,14 @@
-## 0.0.6
+## 0.0.7
 
 ### 📄 Documentation
-- Updated sample images in README (screenshots for home, dialog, and full-screen example)
-- Updated URLs in documentation
-
-## 0.0.5
-
-### 📄 Documentation
-- Updated sample images in README (screenshots for home, dialog, and full-screen example)
-- Updated URLs in documentation
+- Refreshed README preview images (home, dialog, full-screen screenshots)
 
 ---
-## 0.0.4
+
+## 0.0.6 · 0.0.5 · 0.0.4
 
 ### 📄 Documentation
-- Updated sample images in README (screenshots for home, dialog, and full-screen example)
-- Updated URLs in documentation
+- Sample images and URLs in README updated across these releases
 
 ---
 
